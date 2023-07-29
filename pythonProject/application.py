@@ -10,7 +10,7 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    model = joblib.load('model.pkl')
+    model = joblib.load('svc.pkl')
 
     data = {
         'Pregnancies': float(request.form.get('Pregnancies')),
@@ -24,9 +24,9 @@ def predict():
     }
 
     features = np.array([list(data.values())])
-    prediction_proba = model.predict_proba(features)[0]
+    prediction_proba = model.predict_proba(features.reshape(1, -1))
 
-    return f"The probability of the patient having diabetes is {prediction_proba[1]*100:.2f}%."
+    return f"The probability of the patient having diabetes is {prediction_proba[0][1]*100:.2f}%."
 
 if __name__ == '__main__':
     app.run(debug=True)
